@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱国科学家谭智杰奴役美国公司 ChatGPT 做出来矩阵计算器</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>爱国科学家谭智杰奴役美国公司 ChatGPT 做出来矩阵计算器</h2>
+
+    <label for="rows">行数：</label>
+    <input type="number" id="rows" min="1" placeholder="行数">
+
+    <label for="cols">列数：</label>
+    <input type="number" id="cols" min="1" placeholder="列数">
+
+    <button onclick="createMatrix()">快他妈得创建矩阵</button>
+
+    <div id="matrixInput"></div>
+
+    <button onclick="calculateValues()">快尼玛的计算</button>
+
+    <div id="results"></div>
+
+    <script>
+        function createMatrix() {
+            const rows = document.getElementById("rows").value;
+            const cols = document.getElementById("cols").value;
+
+            let matrixInput = '<table>';
+            for (let i = 0; i < rows; i++) {
+                matrixInput += '<tr>';
+                for (let j = 0; j < cols; j++) {
+                    matrixInput += `<td><input type="number" id="matrix${i}${j}" placeholder="${i+1},${j+1}"></td>`;
+                }
+                matrixInput += '</tr>';
+            }
+            matrixInput += '</table>';
+
+            document.getElementById("matrixInput").innerHTML = matrixInput;
+        }
+
+        function calculateValues() {
+            const rows = document.getElementById("rows").value;
+            const cols = document.getElementById("cols").value;
+            let matrix = [];
+
+            for (let i = 0; i < rows; i++) {
+                matrix[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    matrix[i][j] = parseInt(document.getElementById(`matrix${i}${j}`).value) || 0;
+                }
+            }
+
+            const determinant = calculateDeterminant(matrix);
+            const matrixRank = calculateRank(matrix);
+            const eigenvalues = calculateEigenvalues(matrix);
+
+            let results = `<p>行列式: ${determinant}</p>`;
+            results += `<p>秩: ${matrixRank}</p>`;
+            results += `<p>特征值: ${eigenvalues.join(", ")}</p>`;
+
+            document.getElementById("results").innerHTML = results;
+        }
+
+        function calculateDeterminant(matrix) {
+            const n = matrix.length;
+
+            if (n === 2) {
+                return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+            } else if (n === 3) {
+                return (
+                    matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]) -
+                    matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
+                    matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0])
+                );
+            } else if (n === 4) {
+                // 4x4 矩阵的行列式计算
+                return (
+                    matrix[0][0] * matrix[1][1] * matrix[2][2] * matrix[3][3] +
+                    matrix[0][1] * matrix[1][2] * matrix[2][3] * matrix[3][0] +
+                    matrix[0][2] * matrix[1][3] * matrix[2][0] * matrix[3][1] +
+                    matrix[0][3] * matrix[1][0] * matrix[2][1] * matrix[3][2] -
+                    matrix[0][3] * matrix[1][2] * matrix[2][1] * matrix[3][0] -
+                    matrix[0][2] * matrix[1][1] * matrix[2][0] * matrix[3][3] -
+                    matrix[0][1] * matrix[1][0] * matrix[2][3] * matrix[3][2] -
+                    matrix[0][0] * matrix[1][3] * matrix[2][2] * matrix[3][1]
+                );
+            } else if (n === 5) {
+                // 5x5 矩阵的行列式计算
+                return (
+                    matrix[0][0] * matrix[1][1] * matrix[2][2] * matrix[3][3] * matrix[4][4] +
+                    matrix[0][1] * matrix[1][2] * matrix[2][3] * matrix[3][4] * matrix[4][0] +
+                    matrix[0][2] * matrix[1][3] * matrix[2][4] * matrix[3][0] * matrix[4][1] +
+                    matrix[0][3] * matrix[1][4] * matrix[2][0] * matrix[3][1] * matrix[4][2] +
+                    matrix[0][4] * matrix[1][0] * matrix[2][1] * matrix[3][2] * matrix[4][3] -
+                    matrix[0][4] * matrix[1][3] * matrix[2][2] * matrix[3][1] * matrix[4][0] -
+                    matrix[0][3] * matrix[1][2] * matrix[2][1] * matrix[3][0] * matrix[4][4] -
+                    matrix[0][2] * matrix[1][1] * matrix[2][0] * matrix[3][4] * matrix[4][3] -
+                    matrix[0][1] * matrix[1][0] * matrix[2][4] * matrix[3][3] * matrix[4][2] -
+                    matrix[0][0] * matrix[1][4] * matrix[2][3] * matrix[3][2] * matrix[4][1]
+                );
+            } else {
+                console.log("目前仅支持2x2、3x3、4x4和5x5矩阵的行列式计算");
+                return 0;
+            }
+        }
+
+        function calculateRank(matrix) {
+            // 通过高斯消元法计算秩
+            let rows = matrix.length;
+            let cols = matrix[0].length;
+
+            let rank = 0;
+
+            for (let i = 0; i < rows; i++) {
+                // 将当前行的第一个非零元素变为1
+                let pivot = matrix[i][rank];
+                if (pivot !== 0) {
+                    for (let j = 0; j < cols; j++) {
+                        matrix[i][j] /= pivot;
+                    }
+
+                    // 将其他行的对应元素变为零
+                    for (let k = 0; k < rows; k++) {
+                        if (k !== i) {
+                            let factor = matrix[k][rank];
+                            for (let j = 0; j < cols; j++) {
+                                matrix[k][j] -= factor * matrix[i][j];
+                            }
+                        }
+                    }
+
+                    rank++;
+                }
+
+                // 处理下一列
+                if (rank >= cols) {
+                    break;
+                }
+            }
+
+            return rank;
+        }
+
+        function calculateEigenvalues(matrix) {
+            const n = matrix.length;
+
+            if (n === 2) {
+                const a = 1, b = -(matrix[0][0] + matrix[1][1]), c = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+                const discriminant = b * b - 4 * a * c;
+
+                if (discriminant > 0) {
+                    const root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                    const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                    return [root1, root2];
+                } else if (discriminant === 0) {
+                    const root = -b / (2 * a);
+                    return [root];
+                } else {
+                    return ["复数"];
+                }
+            } else {
+                console.log("目前仅支持2x2矩阵的特征值计算");
+                return [];
+            }
+        }
+    </script>
+
+</body>
+</html>
