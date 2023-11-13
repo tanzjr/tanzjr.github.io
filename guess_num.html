@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜数字游戏</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>猜数字游戏</h1>
+        <p>我想了一个1到100之间的数字，你猜是多少？</p>
+        <input type="text" id="guess">
+        <button onclick="checkGuess()">提交猜测</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        var secretNumber = Math.floor(Math.random() * 100) + 1;
+        var attempts = 0;
+
+        function checkGuess() {
+            var userGuess = document.getElementById("guess").value;
+            var message = document.getElementById("message");
+            attempts++;
+
+            if (userGuess == secretNumber) {
+                message.textContent = "恭喜你，你猜对了！你用了 " + attempts + " 次猜中了数字 " + secretNumber + "。";
+            } else if (userGuess < secretNumber) {
+                message.textContent = "猜错了，再试试，数字太小了。";
+            } else {
+                message.textContent = "猜错了，再试试，数字太大了。";
+            }
+        }
+    </script>
+</body>
+
+</html>
